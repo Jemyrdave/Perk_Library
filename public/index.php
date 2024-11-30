@@ -1049,18 +1049,17 @@ $app->post('/book/delete', function (Request $request, Response $response, array
 
         if ($token) {
             try {
-                // Decode the token
                 $decoded = JWT::decode($token, new Key($key, 'HS256'));
 
-                // Check if the book ID is provided
+               
                 if ($bookid) {
-                    // Delete the book
+                    
                     $sql = "DELETE FROM books WHERE bookid = :bookid";
                     $stat = $conn->prepare($sql);
                     $stat->execute([':bookid' => $bookid]);
 
                     if ($stat->rowCount() > 0) {
-                        // Generate a new single-use token
+                       
                         $newToken = JWT::encode(
                             ['data' => ['single_use' => true, 'timestamp' => time()]],
                             $key,
@@ -1071,7 +1070,7 @@ $app->post('/book/delete', function (Request $request, Response $response, array
                             "status" => "success",
                             "data" => array(
                                 "bookid" => $bookid,
-                                "new_token" => $newToken  // Include the new token in the response
+                                "new_token" => $newToken  
                             )
                         )));
                     } else {

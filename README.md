@@ -271,6 +271,128 @@ This API is designed to manage the core functionality of a library, including us
   }
   ```
 
+#### 📍Delete Book
+
+- **URL**: `http://localhost/library/public/book/delete`
+- **Method**: ``POST``
+- **Description**: Requires token to **Delete** Book then generates a single use token.
+- **Request Body**:
+```json
+{
+  "bookid": 1,
+  "token": "(token)"
+}
+```
+
+- **Response**:
+  - **Success**:
+  ```json
+  {
+  "status": "success",
+  "data": {
+    "bookid": 1,
+    "new_token": "(token)"
+    }
+  }
+  ```
+
+  - **Fail**(If Book title is not registered)
+  ```json
+  {
+  "status": "fail",
+  "data": {
+    "title": "Book not found"
+  }
+  }
+  ```
+  or <br>
+  (If book Id is empty)
+  ```json
+  {
+  "status": "fail",
+  "data": {
+    "title": "Book ID required"
+  }
+  }
+  ```
+  or<br>
+  (If token is invalid or expired)
+  ```json
+  {
+  "status": "fail",
+  "data": {
+    "title": "Invalid or expired token"
+  }
+  }
+  ```
+   or <br>
+   (If token was already used)
+  ```json
+  {
+  "status": "fail",
+  "data": {
+    "title": "Token already used "
+  }
+  }
+  ```
+
+  #### 📍Display All Books
+
+- **URL**: `http://localhost/library/public/displayAllBooks?token=(token)`
+- **Method**: ``GET`` 
+- **Description**: Requires token to Display Authors books then generates a single use token.
+
+- **Response**:
+  - **Success**:
+  ```json
+  {
+  "status": "success",
+  "data": [
+    {
+      "bookid": 1,
+      "title": "The House in The Cerulean Sea",
+      "authorid": 2
+    },
+    {
+      "bookid": 2,
+      "title": "Under the Whispering Door",
+      "authorid": 2
+    }
+  ],
+    "new_token": "(generated token)"
+    }
+  ```
+
+  - **Fail**(If book database is empty)
+  ```json 
+  {
+  "status": "fail",
+  "data": {
+    "title": "No books found"
+  }
+  }
+  ```
+  or <br>
+  (If token is invalid or expired)
+
+  ```json
+  {
+  "status": "fail",
+  "data": {
+    "title": "Invalid or expired token"
+  }
+  }
+  ```
+   or <br>
+   (If token was already used)
+  ```json
+  {
+  "status": "fail",
+  "data": {
+    "title": "Token already used"
+  }
+  }
+  ```
 
 
 
