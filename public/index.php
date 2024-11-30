@@ -353,48 +353,48 @@ $app->post('/author/add', function (Request $request, Response $response, array 
 
         if ($token) {
             try {
-                // Decode and validate the token
+                
                 $decoded = JWT::decode($token, new Key($key, 'HS256'));
 
-                // Ensure the token is single-use
+                
                 if (isset($decoded->data->single_use) && $decoded->data->single_use === true) {
-                    // Verify the token from the database
+                   
                     $sql = "SELECT token FROM users WHERE userid = :userid AND token = :token";
                     $stat = $conn->prepare($sql);
                     $stat->execute([':userid' => $decoded->data->userid, ':token' => $token]);
                     $validToken = $stat->fetch();
 
                     if ($validToken) {
-                        // Proceed to add the author if the name is provided
+                       
                         if ($authorname) {
                             $sql = "INSERT INTO authors (authorname) VALUES (:authorname)";
                             $stat = $conn->prepare($sql);
                             $stat->execute([':authorname' => $authorname]);
 
-                            // Get the newly added author ID
+                           
                             $authorId = $conn->lastInsertId();
 
-                            // Invalidate the used token by setting it to NULL
+                            
                             $sql = "UPDATE users SET token = NULL WHERE userid = :userid";
                             $stat = $conn->prepare($sql);
                             $stat->execute([':userid' => $decoded->data->userid]);
 
-                            // Generate a new single-use token
+                            
                             $iat = time();
-                            $exp = $iat + 300; // Token expires in 5 minutes (300 seconds)
+                            $exp = $iat + 300; 
                             $payload = [
                                 'iss' => 'http://library.com',
                                 'iat' => $iat,
                                 'exp' => $exp,
                                 'data' => [
                                     'userid' => $decoded->data->userid,
-                                    'single_use' => true // Mark as single-use token
+                                    'single_use' => true 
                                 ]
                             ];
 
                             $newToken = JWT::encode($payload, $key, 'HS256');
 
-                            // Store the new token in the database
+                            
                             $sql = "UPDATE users SET token = :token WHERE userid = :userid";
                             $stat = $conn->prepare($sql);
                             $stat->execute([':token' => $newToken, ':userid' => $decoded->data->userid]);
@@ -409,42 +409,42 @@ $app->post('/author/add', function (Request $request, Response $response, array 
                                 )
                             )));
                         } else {
-                            // Author name not provided
+                            
                             $response->getBody()->write(json_encode(array(
                                 "status" => "fail",
                                 "data" => array("title" => "Author name required")
                             )));
                         }
                     } else {
-                        // Token already used or invalid
+                        
                         $response->getBody()->write(json_encode(array(
                             "status" => "fail",
                             "data" => array("title" => "Token already used")
                         )));
                     }
                 } else {
-                    // Token is not single-use or invalid
+                    
                     $response->getBody()->write(json_encode(array(
                         "status" => "fail",
                         "data" => array("title" => "Token is not single-use or invalid")
                     )));
                 }
             } catch (Exception $e) {
-                // Invalid or expired token
+               
                 $response->getBody()->write(json_encode(array(
                     "status" => "fail",
                     "data" => array("title" => "Invalid or expired token")
                 )));
             }
         } else {
-            // Token not provided
+            
             $response->getBody()->write(json_encode(array(
                 "status" => "fail",
                 "data" => array("title" => "Token required")
             )));
         }
     } catch (PDOException $e) {
-        // Database error
+       
         error_log($e->getMessage());
         $response->getBody()->write(json_encode(array(
             "status" => "fail",
@@ -979,10 +979,10 @@ $app->get('/displayAllBooks', function (Request $request, Response $response, ar
 
         if ($token) {
             try {
-                // Decode the token
+                
                 $decoded = JWT::decode($token, new Key($key, 'HS256'));
 
-                // Fetch all books
+                
                 $sql = "SELECT * FROM books";
                 $stat = $conn->prepare($sql);
                 $stat->execute();
@@ -990,7 +990,7 @@ $app->get('/displayAllBooks', function (Request $request, Response $response, ar
                 $books = $stat->fetchAll(PDO::FETCH_ASSOC);
 
                 if ($books) {
-                    // Generate a new single-use token
+                    
                     $newToken = JWT::encode(
                         ['data' => ['single_use' => true, 'timestamp' => time()]],
                         $key,
@@ -1000,7 +1000,7 @@ $app->get('/displayAllBooks', function (Request $request, Response $response, ar
                     $response->getBody()->write(json_encode(array(
                         "status" => "success",
                         "data" => $books,
-                        "new_token" => $newToken  // Include the new token in the response
+                        "new_token" => $newToken  
                     )));
                 } else {
                     $response->getBody()->write(json_encode(array(

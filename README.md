@@ -113,8 +113,7 @@ This API is designed to manage the core functionality of a library, including us
   }
   }
   ```
-
-  or <br>
+  <br>
   (If token is already used)
   ```json
   {
@@ -124,7 +123,7 @@ This API is designed to manage the core functionality of a library, including us
   }
   }
   ```
-  or <br>
+  <br>
   (If user id is wrong)
   ```json
   {
@@ -134,7 +133,7 @@ This API is designed to manage the core functionality of a library, including us
   }
   }
   ```
-  or<br>
+  <br>
   (If user did not put any token)
   ```json
   {
@@ -181,7 +180,7 @@ This API is designed to manage the core functionality of a library, including us
   }
   ```
 
-   or<br>
+   <br>
    (If the token is already used)
 
   ```json
@@ -192,7 +191,7 @@ This API is designed to manage the core functionality of a library, including us
   }
   }
   ```
-  or<br>
+  <br>
   (If username is not registered)
   ```json
   {
@@ -202,6 +201,7 @@ This API is designed to manage the core functionality of a library, including us
   }
   }
   ```
+
 ### 📚Book
 
 #### 📍Add Book
@@ -240,7 +240,7 @@ This API is designed to manage the core functionality of a library, including us
   }
   }
   ```
-  or <br>
+  <br>
   (If Title or Author is empty)
   ```json
   {
@@ -250,7 +250,7 @@ This API is designed to manage the core functionality of a library, including us
   }
   }
   ```
-  or<br>>
+  <br>>
   (If token is invalid or expired)
   ```json
   {
@@ -260,7 +260,7 @@ This API is designed to manage the core functionality of a library, including us
   }
   }
   ```
-   or <br>
+  <br>
    (If token was already used)
   ```json
   {
@@ -305,7 +305,7 @@ This API is designed to manage the core functionality of a library, including us
   }
   }
   ```
-  or <br>
+   <br>
   (If book Id is empty)
   ```json
   {
@@ -315,7 +315,7 @@ This API is designed to manage the core functionality of a library, including us
   }
   }
   ```
-  or<br>
+  <br>
   (If token is invalid or expired)
   ```json
   {
@@ -325,7 +325,7 @@ This API is designed to manage the core functionality of a library, including us
   }
   }
   ```
-   or <br>
+   <br>
    (If token was already used)
   ```json
   {
@@ -336,7 +336,7 @@ This API is designed to manage the core functionality of a library, including us
   }
   ```
 
-  #### 📍Display All Books
+#### 📍Display All Books
 
 - **URL**: `http://localhost/library/public/displayAllBooks?token=(token)`
 - **Method**: ``GET`` 
@@ -372,7 +372,7 @@ This API is designed to manage the core functionality of a library, including us
   }
   }
   ```
-  or <br>
+  <br>
   (If token is invalid or expired)
 
   ```json
@@ -383,7 +383,7 @@ This API is designed to manage the core functionality of a library, including us
   }
   }
   ```
-   or <br>
+  <br>
    (If token was already used)
   ```json
   {
@@ -393,6 +393,258 @@ This API is designed to manage the core functionality of a library, including us
   }
   }
   ```
+
+### ✒️Author
+
+#### 📍Add Author
+
+- **URL**: `http://localhost/library/public/author/add`
+- **Method**: ``POST``
+- **Description**: Requires a token to **Add** Author then generates a single use token.
+- **Request Body**:
+```json
+{
+ "authorname": "Author",
+  "token": "(token)"
+}
+```
+
+- **Response**:
+  - **Success**:
+  ```json
+  {
+  "status": "success",
+  "data": {
+    "authorid": "1",
+    "authorname": "Author",
+    "new_token": "(token)"
+    }
+  }
+  ```
+
+  - **Fail**(If Author name is empty)
+  ```json
+  {
+  "status": "fail",
+  "data": {
+    "title": "Author name required"
+  }
+  }
+  ```
+  <br>
+  (If token is invalid or expired)
+  ```json
+  {
+  "status": "fail",
+  "data": {
+    "title": "Invalid or expired token"
+  }
+  }
+  ```
+   <br>
+   (If token was already used)
+  ```json
+  {
+  "status": "fail",
+  "data": {
+    "title": "Token already used"
+  }
+  }
+  ```
+
+#### 📍Update Author
+
+- **URL**: `http://localhost/library/public/author/update`
+- **Method**: ``POST``
+- **Description**: Requires token to **Update** Author then generates a single use token.
+- **Request Body**:
+```json
+{
+  "authorid": 1,
+  "authorname":"Dan Brown",
+  "token": "(token)"
+}
+```
+
+- **Response**:
+  - **Success**:
+  ```json
+  {
+  "status": "success",
+  "data": {
+    "authorid": 1,
+    "authorname": "Dan Brown",
+    "new_token": "(token)"
+    }
+  }
+  ```
+
+  - **Fail**(If Author is not registered)
+  ```json
+  {
+  "status": "fail",
+  "data": {
+    "title": "Author not found or no changes made"
+  }
+  }
+  ```
+  <br>
+  (If token is invalid or expired)
+  ```json
+  {
+  "status": "fail",
+  "data": {
+    "title": "Invalid or expired token"
+  }
+  }
+  ```
+  <br>
+  (If token was already used)
+  ```json
+  {
+  "status": "fail",
+  "data": {
+    "title": "Token already used or invalid"
+  }
+  }
+  ```
+
+#### 📍Delete Author
+
+- **URL**: `http://localhost/library/public/author/delete`
+- **Method**: ``POST``
+- **Description**: Requires token to **Delete** Author then generates a single use token.
+- **Request Body**:
+```json
+{
+  "authorid": 2,
+  "token": "(token)"
+}
+
+```
+
+- **Response**:
+  - **Success**:
+  ```json
+  {
+  "status": "success",
+  "data": {
+    "authorid": 2,
+    "new_token": "(token)"
+    }
+  }
+  ```
+
+  - **Fail**(If Author is not registered)
+  ```json
+  {
+  "status": "fail",
+  "data": {
+    "title": "Author not found"
+  }
+  }
+  ```
+  <br>
+  (If Author Id is empty)
+
+  ```json
+  {
+  "status": "fail",
+  "data": {
+    "title": "Author ID required"
+  }
+  }
+  ```
+  <br>
+  (If token is expired or invalid)
+  ```json
+  {
+  "status": "fail",
+  "data": {
+    "title": "Invalid or expired token"
+  }
+  }
+  ```
+  <br>
+  (If token was already used)
+  ```json
+  {
+  "status": "fail",
+  "data": {
+    "title": "Token already used"
+  }
+  }
+  ```
+
+#### 📍Display Books Registered to Author
+
+- **URL**: `http://localhost/library/public/author/displaybook?authorid=(AuthorID)&token=(token)`
+- **Method**: ``GET``
+- **Description**: Reuires token to **Display** Authors books then generates a single use token. 
+    
+- **Response**:
+  - **Success**:
+  ```json
+  {
+  "status": "success",
+  "data": [
+    {
+      "bookid": 1,
+      "title": "The House in The Cerulean Sea",
+      "authorid": 2
+    },
+    {
+      "bookid": 2,
+      "title": "Under the Whispering Door",
+      "authorid": 2
+    }
+  ],
+    "new_token": "(token)"
+    }
+  ```
+
+  - **Fail**(If no books registered under author)
+
+  ```json 
+  {
+  "status": "fail",
+  "data": {
+    "title": "No books found for the given author ID"
+  }
+  }
+  ```
+  <br>
+  (If Author Id is empty)
+  ```json 
+  {
+  "status": "fail",
+  "data": {
+    "title": "Author ID required"
+  }
+  }
+  ```
+  <br>
+  (If token is expired or invalid)
+
+  ```json
+  {
+  "status": "fail",
+  "data": {
+    "title": "Invalid or expired token"
+  }
+  }
+  ```
+  <br>
+  (If token was already used)
+  ```json
+  {
+  "status": "fail",
+  "data": {
+    "title": "Token already used"
+  }
+  }
+  ```
+
 
 
 
