@@ -114,7 +114,7 @@ This API is designed to manage the core functionality of a library, including us
   }
   ```
 
-  or 
+  or <br>
   (If token is already used)
   ```json
   {
@@ -124,7 +124,8 @@ This API is designed to manage the core functionality of a library, including us
   }
   }
   ```
-  or 
+  or <br>
+  (If user id is wrong)
   ```json
   {
   "status": "fail",
@@ -133,7 +134,7 @@ This API is designed to manage the core functionality of a library, including us
   }
   }
   ```
-  or 
+  or<br>
   (If user did not put any token)
   ```json
   {
