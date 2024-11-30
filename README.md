@@ -204,7 +204,7 @@ This API is designed to manage the core functionality of a library, including us
   ```
 ### Book
 
-### Add Book
+### 📍Add Book
 - **URL**: `http://localhost:/library/public/book/add`
 - **Method**: ``POST``
 - **Description**: Requires token to **Add** book then generates a single use token.
