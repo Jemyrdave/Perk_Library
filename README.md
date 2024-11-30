@@ -1,7 +1,7 @@
 # Library Management System Documentation
 This API is designed to manage the core functionality of a library, including user registration and authentication, book management, author management, and the book borrowing and returning system. It's designed to simplify library operations, improve efficiency, and provide a seamless experience for both users and administrators. The API is built using Slim Framework for routing and JWT (JSON Web Tokens) for authentication.
 
-## Tools and Software Used
+## ⚙️Tools and Software Used
 - **PHP**: A robust server-side scripting language for developing dynamic and secure APIs.
 - **Slim Framework**: A lightweight PHP framework designed for building RESTful web services with efficiency.
 - **JWT (JSON Web Token)**: A standard for secure, stateless authentication and authorization in the API.
@@ -9,7 +9,7 @@ This API is designed to manage the core functionality of a library, including us
 - **JSON**: A lightweight data format used for seamless communication between the client and the server in API requests and responses.
 - **Composer**: Dependency management for PHP projects.
 
-## Features
+## ✨Features
 - **User Registration**: Create a new user account.
 - **User Authentication**: Authenticate users and generate JWT tokens for secure access.
 - **Token Middleware**: Protect routes with JWT authentication, handle token regeneration, and blacklist expired tokens.
@@ -22,9 +22,9 @@ This API is designed to manage the core functionality of a library, including us
 
 ## Endpoints
 
-### User
+### 🧑🏻‍💻User
 
-#### User Registration
+#### 📍User Registration
 - **URL**: `http://localhost/library/public/user/create`
 - **Method**: ``POST``
 - **Description**: Registers the user
@@ -47,7 +47,7 @@ This API is designed to manage the core functionality of a library, including us
   ```
 
 
-#### User Authentication
+#### 📍User Authentication
 - **URL**: `http://localhost/library/public/user/authorize`
 - **Method**: ``POST``
 - **Description**: Checks if the user is registered then generates a single use token.
@@ -79,7 +79,7 @@ This API is designed to manage the core functionality of a library, including us
   }
   ```
 
-#### User Update
+#### 📍User Update
 - **URL**: `http://localhost/library/public/user/update`
 - **Method**: ``POST``
 - **Description**: Requires token to **Update** the details of the user then generates a single use token.
@@ -145,7 +145,7 @@ This API is designed to manage the core functionality of a library, including us
   }
   ```
 
-#### Delete User
+#### 📍Delete User
 
 - **URL**: `http://localhost/library/public/user/delete`
 - **Method**: ``POST``
@@ -202,9 +202,9 @@ This API is designed to manage the core functionality of a library, including us
   }
   }
   ```
-### Book
+### 📚Book
 
-### 📍Add Book
+#### 📍Add Book
 - **URL**: `http://localhost:/library/public/book/add`
 - **Method**: ``POST``
 - **Description**: Requires token to **Add** book then generates a single use token.
