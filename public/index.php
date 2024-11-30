@@ -50,7 +50,7 @@ $app->post('/user/authorize', function (Request $request, Response $response, ar
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         if ($usr && $pass) {
-            // Check user credentials
+            
             $sql = "SELECT * FROM users WHERE username = :username AND password = :password";
             $stat = $conn->prepare($sql);
             $stat->execute([':username' => $usr, ':password' => hash('SHA256', $pass)]);
@@ -58,9 +58,9 @@ $app->post('/user/authorize', function (Request $request, Response $response, ar
             $user = $stat->fetch();
 
             if ($user) {
-                // Create a single-use token with expiration
+                
                 $iat = time();
-                $exp = $iat + 300; // Token expires in 5 minutes (300 seconds)
+                $exp = $iat + 300; 
                 $payload = [
                     'iss' => 'http://library.com',
                     'iat' => $iat,
@@ -68,25 +68,25 @@ $app->post('/user/authorize', function (Request $request, Response $response, ar
                     'data' => [
                         'userid' => $user['userid'],
                         'username' => $user['username'],
-                        'single_use' => true // Mark as single-use token
+                        'single_use' => true 
                     ]
                 ];
 
                 $singleUseToken = JWT::encode($payload, $key, 'HS256');
 
-                // Store the token in the database with single-use flag
+                
                 $sql = "UPDATE users SET token = :token WHERE userid = :userid";
                 $stat = $conn->prepare($sql);
                 $stat->execute([':token' => $singleUseToken, ':userid' => $user['userid']]);
 
-                // Return the token to the user
+                
                 $response->getBody()->write(json_encode(array("status" => "success", "token" => $singleUseToken)));
             } else {
-                // Authentication failed
+                
                 $response->getBody()->write(json_encode(array("status" => "fail", "data" => array("title" => "Authentication Failed"))));
             }
         } else {
-            // Missing credentials
+            
             $response->getBody()->write(json_encode(array("status" => "fail", "data" => array("title" => "Credentials required"))));
         }
     } catch (PDOException $e) {
@@ -99,11 +99,10 @@ $app->post('/user/authorize', function (Request $request, Response $response, ar
 
 $app->post('/user/update', function (Request $request, Response $response, array $args) {
     $data = json_decode($request->getBody());
-    $userid = isset($data->userid) ? $data->userid : null;  // ID of the user to update
-    $usr = isset($data->username) ? $data->username : null;  // New username
-    $pass = isset($data->password) ? $data->password : null;  // New password
-    $token = isset($data->token) ? $data->token : null;  // Single-use token
-
+    $userid = isset($data->userid) ? $data->userid : null;  
+    $usr = isset($data->username) ? $data->username : null;  
+    $pass = isset($data->password) ? $data->password : null;  
+    $token = isset($data->token) ? $data->token : null;  
     $key = 'server_secret_key';
 
     $servername = "localhost";
@@ -117,19 +116,19 @@ $app->post('/user/update', function (Request $request, Response $response, array
 
         if ($token) {
             try {
-                // Decode the token and validate
+                
                 $decoded = JWT::decode($token, new Key($key, 'HS256'));
 
-                // Check if the token is single-use
+                
                 if (isset($decoded->data->single_use) && $decoded->data->single_use === true) {
-                    // Check if the token is still valid and not used
+                   
                     $sql = "SELECT token FROM users WHERE userid = :userid AND token = :token";
                     $stat = $conn->prepare($sql);
                     $stat->execute([':userid' => $decoded->data->userid, ':token' => $token]);
                     $validToken = $stat->fetch();
 
                     if ($validToken) {
-                        // Perform user update
+                        
                         if ($userid) {
                             $sql = "UPDATE users SET ";
                             $params = [];
@@ -183,7 +182,7 @@ $app->post('/user/update', function (Request $request, Response $response, array
                                     $response->getBody()->write(json_encode(array(
                                         "status" => "success",
                                         "message" => "User updated successfully.",
-                                        "new_token" => $newToken // Return the new token
+                                        "new_token" => $newToken 
                                     )));
                                 } else {
                                     $response->getBody()->write(json_encode(array("status" => "fail", "data" => array("title" => "User not found or no change made"))));
@@ -195,7 +194,7 @@ $app->post('/user/update', function (Request $request, Response $response, array
                             $response->getBody()->write(json_encode(array("status" => "fail", "data" => array("title" => "User ID required"))));
                         }
                     } else {
-                        $response->getBody()->write(json_encode(array("status" => "fail", "data" => array("title" => "Token already used or invalid"))));
+                        $response->getBody()->write(json_encode(array("status" => "fail", "data" => array("title" => "Token already used "))));
                     }
                 } else {
                     $response->getBody()->write(json_encode(array("status" => "fail", "data" => array("title" => "Token is not single-use or invalid"))));

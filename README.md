@@ -20,6 +20,130 @@ This API is designed to manage the core functionality of a library, including us
   - Manage relationships between books and authors.
   - Manage borrow and return of books
 
-  
+## Endpoints
+
+### User
+
+#### User Registration
+- **URL**: `http://localhost/library/public/user/create`
+- **Method**: ``POST``
+- **Description**: Registers the user
+
+- **Body**:
+```json
+{
+  "username": "username",
+  "password": "password"
+}
+```
+
+- **Response**:
+  - **Success**:
+  ```json
+  {
+  "status": "success",
+  "message": "User registered successfully"
+  }
+  ```
+
+
+#### User Authentication
+- **URL**: `http://localhost/library/public/user/authorize`
+- **Method**: ``POST``
+- **Description**: Checks if the user is registered then generates a single use token.
+
+- **Body**:
+```json
+{
+  "username":"username",
+  "password": "password"
+}
+```
+
+- **Response**:
+  - **Success**:
+  ```json
+  {
+  "status": "success",
+  "token": "(token)"
+  }
+  ```
+
+  - **Fail**
+  ```json
+  {
+  "status": "fail",
+  "data": {
+    "title": "Authentication Failed"
+  }
+  }
+  ```
+
+#### User Update
+- **URL**: `http://localhost/library/public/user/update`
+- **Method**: ``POST``
+- **Description**: Ask for a token to Update the details of the user. Generates a single use token.
+- **Body**:
+```json
+{
+  "userid":"3",
+  "username":"updated_username",
+  "password":"password",
+  "token": "(token)"
+}
+```
+
+- **Response**:
+  - **Success**:
+  ```json
+  {
+  "status": "success",
+  "message": "User updated successfully.",
+  "new_token": "(token)"
+  }
+  ```
+
+  - **Fail**
+  (For Invalid or expired token)
+  ```json
+  {
+  "status": "fail",
+  "data": {
+    "title": "Invalid or expired token"
+  }
+  }
+  ```
+
+  or 
+  (If token is already used)
+  ```json
+  {
+  "status": "fail",
+  "data": {
+    "title": "Token already used"
+  }
+  }
+  ```
+  or 
+  ```json
+  {
+  "status": "fail",
+  "data": {
+    "title": "User not found or no change made"
+  }
+  }
+  ```
+  or 
+  (If user did not put any token)
+  ```json
+  {
+  "status": "fail",
+  "data": {
+    "title": "Token required"
+  }
+  }
+  ```
+
+
 
 
