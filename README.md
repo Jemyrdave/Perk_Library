@@ -29,7 +29,7 @@ This API is designed to manage the core functionality of a library, including us
 - **Method**: ``POST``
 - **Description**: Registers the user
 
-- **Body**:
+- **Request Body**:
 ```json
 {
   "username": "username",
@@ -52,7 +52,7 @@ This API is designed to manage the core functionality of a library, including us
 - **Method**: ``POST``
 - **Description**: Checks if the user is registered then generates a single use token.
 
-- **Body**:
+- **Request Body**:
 ```json
 {
   "username":"username",
@@ -82,8 +82,8 @@ This API is designed to manage the core functionality of a library, including us
 #### User Update
 - **URL**: `http://localhost/library/public/user/update`
 - **Method**: ``POST``
-- **Description**: Ask for a token to Update the details of the user. Generates a single use token.
-- **Body**:
+- **Description**: Requires token to **Update** the details of the user then generates a single use token.
+- **Request Body**:
 ```json
 {
   "userid":"3",
@@ -144,6 +144,137 @@ This API is designed to manage the core functionality of a library, including us
   }
   }
   ```
+
+#### Delete User
+
+- **URL**: `http://localhost/library/public/user/delete`
+- **Method**: ``POST``
+- **Description**: Requires token to **Delete** user then generates a single use token.
+- **Request Body**:
+```json
+{
+  "userid":6,
+  "token": "(token)"
+}
+```
+
+- **Response**:
+  - **Success**:
+  ```json
+  {
+  "status": "success",
+  "data": {
+    "userid": 6,
+    "username":"admin",
+    "new_token": "(token)"
+    }
+  }
+  ```
+
+  - **Fail** (If token is invalid or expired)
+  ```json
+  {
+  "status": "fail",
+  "data": {
+    "title": "Invalid or expired token"
+  }
+  }
+  ```
+
+   or<br>
+   (If the token is already used)
+
+  ```json
+  {
+  "status": "fail",
+  "data": {
+    "title": "Token already used "
+  }
+  }
+  ```
+  or<br>
+  (If username is not registered)
+  ```json
+  {
+  "status": "fail",
+  "data": {
+    "title": "User not found"
+  }
+  }
+  ```
+### Book
+
+### Add Book
+- **URL**: `http://localhost:/library/public/book/add`
+- **Method**: ``POST``
+- **Description**: Requires token to **Add** book then generates a single use token.
+- **Request Body**:
+```json
+{
+    "title": "Book",
+    "authorid": 5,
+  "token": "(token)"
+}
+```
+
+- **Response**:
+  - **Success**:
+  ```json
+  {
+  "status": "success",
+  "data": {
+    "bookid": "4",
+    "title": "Book",
+    "authorid": 5,
+    "new_token": "(token)"
+    }
+  }
+  ```
+
+  - **Fail** (If wrong Author Id was inputted)
+  ```json
+  {
+  "status": "fail",
+  "data": {
+    "title": "Author ID not found"
+  }
+  }
+  ```
+  or <br>
+  (If Title or Author is empty)
+  ```json
+  {
+  "status": "fail",
+  "data": {
+    "title": "Title and Author ID required"
+  }
+  }
+  ```
+  or<br>>
+  (If token is invalid or expired)
+  ```json
+  {
+  "status": "fail",
+  "data": {
+    "title": "Invalid or expired token"
+  }
+  }
+  ```
+   or <br>
+   (If token was already used)
+  ```json
+  {
+  "status": "fail",
+  "data": {
+    "title": "Token already used "
+  }
+  }
+  ```
+
+
+
+
+
 
 
 
