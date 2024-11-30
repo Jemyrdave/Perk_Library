@@ -565,7 +565,7 @@ This API is designed to manage the core functionality of a library, including us
   }
   }
   ```
-  <br>
+  
   (If token was already used)
   ```json
   {
@@ -644,6 +644,133 @@ This API is designed to manage the core functionality of a library, including us
   }
   }
   ```
+
+### 📖Borrow and Return 
+#### 📍Borrow
+
+- **URL**: `http://localhost/library/public/user/borrow`
+- **Method**: ``POST``
+- **Description**: Requires token to register a user borrowing a book then generates a single use token.
+- **Request Body**:
+```json
+{
+  "userid":1,
+  "bookid":1,
+  "token": "(token)"
+}
+```
+
+- **Response**:
+  - **Success**:
+  ```json
+  {
+  "status": "success",
+  "data": {
+    "borrowid": "1",
+    "userid": 1,
+    "bookid": 1,
+    "new_token": "(token)"
+    }
+  }
+  ```
+
+  - **Fail**(If User Id and Book Id is empty)
+  ```json
+  {
+  "status": "fail",
+  "data": {
+    "title": "User ID and Book ID are required"
+  }
+  }
+  ```
+  (If Token is invalid or expired)
+  ```json
+  {
+  "status": "fail",
+  "data": {
+    "title": "Invalid or expired token"
+  }
+  }
+  ```
+   (If token was already used)
+  ```json
+  {
+  "status": "fail",
+  "data": {
+    "title": "Token already used "
+  }
+  }
+  ```
+  (If token is empty)
+  ```json
+
+  {
+  "status": "fail",
+  "data": {
+    "title": "Token required"
+  }
+  }
+  ```
+
+#### 📍User Return
+
+- **URL**: `http://localhost/library/public/user/return`
+- **Method**: ``POST``
+- **Description**: Requires token to update status of book returned then generates a single use token.
+- **Request Body**:
+```json
+{
+  "userid":1,
+  "borrowid":5,
+  "token": "(token)"
+}
+```
+
+- **Response**:
+  - **Success**:
+  ```json
+  {
+  "status": "success",
+  "data": {
+    "borrowid": 5,
+    "userid": 1
+  },
+    "new_token": "(token)"
+    }
+
+  ```
+
+  - **Fail**
+  (If user ID or borrow ID are missing)
+  ```json
+  {
+  "status": "fail",
+  "data": {
+    "title": "No borrow record found for the given user ID and borrow ID"
+  }
+  }
+  ```
+  (If token is invalid or expired)
+  ```json
+  {
+  "status": "fail",
+  "data": {
+    "title": "Invalid or expired token"
+  }
+  }
+  ```
+  (If token was already used)
+
+  ```json
+  {
+  "status": "fail",
+  "data": {
+    "title": "Token already"
+  }
+  }
+  ```
+
+
 
 
 

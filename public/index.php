@@ -473,103 +473,103 @@ $app->post('/author/update', function (Request $request, Response $response, arr
 
         if ($token) {
             try {
-                // Decode and validate the token
+                
                 $decoded = JWT::decode($token, new Key($key, 'HS256'));
 
-                // Check if the token is marked as single-use
+               
                 if (isset($decoded->data->single_use) && $decoded->data->single_use === true) {
-                    // Verify if the token is still valid and hasn't been used
+                    
                     $sql = "SELECT token FROM users WHERE userid = :userid AND token = :token";
                     $stat = $conn->prepare($sql);
                     $stat->execute([':userid' => $decoded->data->userid, ':token' => $token]);
                     $validToken = $stat->fetch();
 
                     if ($validToken) {
-                        // Proceed with author update if both authorid and authorname are provided
+                        
                         if ($authorid && $authorname) {
                             $sql = "UPDATE authors SET authorname = :authorname WHERE authorid = :authorid";
                             $stat = $conn->prepare($sql);
                             $stat->execute([':authorname' => $authorname, ':authorid' => $authorid]);
 
                             if ($stat->rowCount() > 0) {
-                                // Invalidate the old token after successful update
+                               
                                 $sql = "UPDATE users SET token = NULL WHERE userid = :userid";
                                 $stat = $conn->prepare($sql);
                                 $stat->execute([':userid' => $decoded->data->userid]);
 
-                                // Generate a new single-use token
+                               
                                 $iat = time();
-                                $exp = $iat + 300; // Token expires in 5 minutes
+                                $exp = $iat + 300; 
                                 $payload = [
                                     'iss' => 'http://library.com',
                                     'iat' => $iat,
                                     'exp' => $exp,
                                     'data' => [
                                         'userid' => $decoded->data->userid,
-                                        'single_use' => true // Mark as single-use
+                                        'single_use' => true 
                                     ]
                                 ];
 
                                 $newToken = JWT::encode($payload, $key, 'HS256');
 
-                                // Store the new token in the database
+                                
                                 $sql = "UPDATE users SET token = :token WHERE userid = :userid";
                                 $stat = $conn->prepare($sql);
                                 $stat->execute([':token' => $newToken, ':userid' => $decoded->data->userid]);
 
-                                // Return success response with new token
+                               
                                 $response->getBody()->write(json_encode(array(
                                     "status" => "success",
                                     "data" => array(
                                         "authorid" => $authorid,
                                         "authorname" => $authorname,
-                                        "new_token" => $newToken // Return the new token
+                                        "new_token" => $newToken 
                                     )
                                 )));
                             } else {
-                                // Author not found or no changes made
+                                
                                 $response->getBody()->write(json_encode(array(
                                     "status" => "fail",
                                     "data" => array("title" => "Author not found or no changes made")
                                 )));
                             }
                         } else {
-                            // Author ID or new name not provided
+                           
                             $response->getBody()->write(json_encode(array(
                                 "status" => "fail",
                                 "data" => array("title" => "Author ID and new author name required")
                             )));
                         }
                     } else {
-                        // Token already used or invalid
+                        
                         $response->getBody()->write(json_encode(array(
                             "status" => "fail",
-                            "data" => array("title" => "Token already used or invalid")
+                            "data" => array("title" => "Token already used ")
                         )));
                     }
                 } else {
-                    // Token is not single-use or invalid
+                    
                     $response->getBody()->write(json_encode(array(
                         "status" => "fail",
                         "data" => array("title" => "Token is not single-use or invalid")
                     )));
                 }
             } catch (Exception $e) {
-                // Invalid or expired token
+                
                 $response->getBody()->write(json_encode(array(
                     "status" => "fail",
                     "data" => array("title" => "Invalid or expired token")
                 )));
             }
         } else {
-            // Token not provided
+           
             $response->getBody()->write(json_encode(array(
                 "status" => "fail",
                 "data" => array("title" => "Token required")
             )));
         }
     } catch (PDOException $e) {
-        // Database error
+       
         error_log($e->getMessage());
         $response->getBody()->write(json_encode(array(
             "status" => "fail",
@@ -597,102 +597,102 @@ $app->post('/author/delete', function (Request $request, Response $response, arr
 
         if ($token) {
             try {
-                // Decode and validate the token
+               
                 $decoded = JWT::decode($token, new Key($key, 'HS256'));
 
-                // Check if the token is marked as single-use
+                
                 if (isset($decoded->data->single_use) && $decoded->data->single_use === true) {
-                    // Verify if the token is still valid and hasn't been used
+                    
                     $sql = "SELECT token FROM users WHERE userid = :userid AND token = :token";
                     $stat = $conn->prepare($sql);
                     $stat->execute([':userid' => $decoded->data->userid, ':token' => $token]);
                     $validToken = $stat->fetch();
 
                     if ($validToken) {
-                        // Proceed with deleting the author if authorid is provided
+                        
                         if ($authorid) {
                             $sql = "DELETE FROM authors WHERE authorid = :authorid";
                             $stat = $conn->prepare($sql);
                             $stat->execute([':authorid' => $authorid]);
 
                             if ($stat->rowCount() > 0) {
-                                // Invalidate the old token after successful deletion
+                                
                                 $sql = "UPDATE users SET token = NULL WHERE userid = :userid";
                                 $stat = $conn->prepare($sql);
                                 $stat->execute([':userid' => $decoded->data->userid]);
 
-                                // Generate a new single-use token
+                                
                                 $iat = time();
-                                $exp = $iat + 300; // Token expires in 5 minutes
+                                $exp = $iat + 300; 
                                 $payload = [
                                     'iss' => 'http://library.com',
                                     'iat' => $iat,
                                     'exp' => $exp,
                                     'data' => [
                                         'userid' => $decoded->data->userid,
-                                        'single_use' => true // Mark as single-use
+                                        'single_use' => true 
                                     ]
                                 ];
 
                                 $newToken = JWT::encode($payload, $key, 'HS256');
 
-                                // Store the new token in the database
+                                
                                 $sql = "UPDATE users SET token = :token WHERE userid = :userid";
                                 $stat = $conn->prepare($sql);
                                 $stat->execute([':token' => $newToken, ':userid' => $decoded->data->userid]);
 
-                                // Return success response with the new token
+                               
                                 $response->getBody()->write(json_encode(array(
                                     "status" => "success",
                                     "data" => array(
                                         "authorid" => $authorid,
-                                        "new_token" => $newToken // Return the new token
+                                        "new_token" => $newToken 
                                     )
                                 )));
                             } else {
-                                // Author not found
+                                
                                 $response->getBody()->write(json_encode(array(
                                     "status" => "fail",
                                     "data" => array("title" => "Author not found")
                                 )));
                             }
                         } else {
-                            // Author ID not provided
+                            
                             $response->getBody()->write(json_encode(array(
                                 "status" => "fail",
                                 "data" => array("title" => "Author ID required")
                             )));
                         }
                     } else {
-                        // Token already used or invalid
+                        
                         $response->getBody()->write(json_encode(array(
                             "status" => "fail",
-                            "data" => array("title" => "Token already used or invalid")
+                            "data" => array("title" => "Token already used")
                         )));
                     }
                 } else {
-                    // Token is not single-use or invalid
+                    
                     $response->getBody()->write(json_encode(array(
                         "status" => "fail",
                         "data" => array("title" => "Token is not single-use or invalid")
                     )));
                 }
             } catch (Exception $e) {
-                // Invalid or expired token
+               
                 $response->getBody()->write(json_encode(array(
                     "status" => "fail",
                     "data" => array("title" => "Invalid or expired token")
                 )));
             }
         } else {
-            // Token not provided
+            
             $response->getBody()->write(json_encode(array(
                 "status" => "fail",
                 "data" => array("title" => "Token required")
             )));
         }
     } catch (PDOException $e) {
-        // Database error
+        
         error_log($e->getMessage());
         $response->getBody()->write(json_encode(array(
             "status" => "fail",
@@ -855,19 +855,19 @@ $app->get('/author/displaybook', function (Request $request, Response $response,
 
         if ($token) {
             try {
-                // Decode and validate the token
+                
                 $decoded = JWT::decode($token, new Key($key, 'HS256'));
 
-                // Check if the token is marked as single-use
+                
                 if (isset($decoded->data->single_use) && $decoded->data->single_use === true) {
-                    // Verify if the token is still valid and hasn't been used
+                    
                     $sql = "SELECT token FROM users WHERE userid = :userid AND token = :token";
                     $stat = $conn->prepare($sql);
                     $stat->execute([':userid' => $decoded->data->userid, ':token' => $token]);
                     $validToken = $stat->fetch();
 
                     if ($validToken) {
-                        // Proceed to retrieve books if authorid is provided
+                        
                         if ($authorid) {
                             $sql = "SELECT * FROM books WHERE authorid = :authorid";
                             $stat = $conn->prepare($sql);
@@ -876,81 +876,81 @@ $app->get('/author/displaybook', function (Request $request, Response $response,
                             $books = $stat->fetchAll(PDO::FETCH_ASSOC);
 
                             if ($books) {
-                                // Invalidate the old token after successful retrieval
+                                
                                 $sql = "UPDATE users SET token = NULL WHERE userid = :userid";
                                 $stat = $conn->prepare($sql);
                                 $stat->execute([':userid' => $decoded->data->userid]);
 
-                                // Generate a new single-use token
+                                
                                 $iat = time();
-                                $exp = $iat + 300; // Token expires in 5 minutes
+                                $exp = $iat + 300; 
                                 $payload = [
                                     'iss' => 'http://library.com',
                                     'iat' => $iat,
                                     'exp' => $exp,
                                     'data' => [
                                         'userid' => $decoded->data->userid,
-                                        'single_use' => true // Mark as single-use
+                                        'single_use' => true 
                                     ]
                                 ];
 
                                 $newToken = JWT::encode($payload, $key, 'HS256');
 
-                                // Store the new token in the database
+                                
                                 $sql = "UPDATE users SET token = :token WHERE userid = :userid";
                                 $stat = $conn->prepare($sql);
                                 $stat->execute([':token' => $newToken, ':userid' => $decoded->data->userid]);
 
-                                // Return success response with book details and new token
+                                
                                 $response->getBody()->write(json_encode(array(
                                     "status" => "success",
                                     "data" => $books,
-                                    "new_token" => $newToken // Return the new token
+                                    "new_token" => $newToken 
                                 )));
                             } else {
-                                // No books found for the given author ID
+                                
                                 $response->getBody()->write(json_encode(array(
                                     "status" => "fail",
                                     "data" => array("title" => "No books found for the given author ID")
                                 )));
                             }
                         } else {
-                            // Author ID required
+                            
                             $response->getBody()->write(json_encode(array(
                                 "status" => "fail",
                                 "data" => array("title" => "Author ID required")
                             )));
                         }
                     } else {
-                        // Token already used or invalid
+                        
                         $response->getBody()->write(json_encode(array(
                             "status" => "fail",
-                            "data" => array("title" => "Token already used or invalid")
+                            "data" => array("title" => "Token already used")
                         )));
                     }
                 } else {
-                    // Token is not single-use or invalid
+                    
                     $response->getBody()->write(json_encode(array(
                         "status" => "fail",
                         "data" => array("title" => "Token is not single-use or invalid")
                     )));
                 }
             } catch (Exception $e) {
-                // Invalid or expired token
+                
                 $response->getBody()->write(json_encode(array(
                     "status" => "fail",
                     "data" => array("title" => "Invalid or expired token")
                 )));
             }
         } else {
-            // Token not provided
+            
             $response->getBody()->write(json_encode(array(
                 "status" => "fail",
                 "data" => array("title" => "Token required")
             )));
         }
     } catch (PDOException $e) {
-        // Database error
+        
         error_log($e->getMessage());
         $response->getBody()->write(json_encode(array(
             "status" => "fail",
@@ -1127,52 +1127,52 @@ $app->post('/user/borrow', function (Request $request, Response $response, array
 
         if ($token) {
             try {
-                // Decode the token
+                
                 $decoded = JWT::decode($token, new Key($key, 'HS256'));
 
-                // Check if the required fields are provided
+                
                 if ($userid && $bookid) {
-                    // Insert borrow record
+                    
                     $sql = "INSERT INTO books_borrowed (userid, bookid, borrowed_at) VALUES (:userid, :bookid, NOW())";
                     $stat = $conn->prepare($sql);
                     $stat->execute([':userid' => $userid, ':bookid' => $bookid]);
 
-                    // Get the new borrow ID
+                    
                     $borrowId = $conn->lastInsertId();
 
-                    // Generate a new single-use token
+                    
                     $newToken = JWT::encode(
                         ['data' => ['single_use' => true, 'timestamp' => time()]],
                         $key,
                         'HS256'
                     );
 
-                    // Return success response with new token
+                    
                     $response->getBody()->write(json_encode(array(
                         "status" => "success",
                         "data" => array(
                             "borrowid" => $borrowId,
                             "userid" => $userid,
                             "bookid" => $bookid,
-                            "new_token" => $newToken  // Include the new token
+                            "new_token" => $newToken  
                         )
                     )));
                 } else {
-                    // Missing User ID or Book ID
+                    
                     $response->getBody()->write(json_encode(array(
                         "status" => "fail",
                         "data" => array("title" => "User ID and Book ID are required")
                     )));
                 }
             } catch (Exception $e) {
-                // Invalid or expired token
+                
                 $response->getBody()->write(json_encode(array(
                     "status" => "fail",
                     "data" => array("title" => "Invalid or expired token")
                 )));
             }
         } else {
-            // No token provided
+            
             $response->getBody()->write(json_encode(array(
                 "status" => "fail",
                 "data" => array("title" => "Token required")
@@ -1183,85 +1183,6 @@ $app->post('/user/borrow', function (Request $request, Response $response, array
         $response->getBody()->write(json_encode(array(
             "status" => "fail",
             "data" => array("title" => "Database Error")
-        )));
-    }
-
-    return $response;
-});
-
-$app->get('/user/borrowed_returned_books', function (Request $request, Response $response, array $args) {
-    $queryParams = $request->getQueryParams();
-    $token = isset($queryParams['token']) ? $queryParams['token'] : null;
-
-    $key = 'server_secret_key';
-    $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $dbname = "library";
-
-    try {
-        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-        // Check if a token is provided
-        if ($token) {
-            try {
-                // Decode the token (assuming HS256 for simplicity)
-                $decoded = JWT::decode($token, new Key($key, 'HS256'));
-
-                // Query to display borrowed and returned books
-                $sql = "
-                    SELECT u.userid, u.username, bb.borrowid, b.title, a.authorname, bb.borrowed_at, bb.returned_at 
-                    FROM books_borrowed AS bb
-                    JOIN books AS b ON bb.bookid = b.bookid
-                    JOIN authors AS a ON b.authorid = a.authorid
-                    JOIN users AS u ON bb.userid = u.userid
-                    ORDER BY bb.borrowed_at DESC
-                ";
-                $stat = $conn->prepare($sql);
-                $stat->execute();
-
-                $booksStatus = $stat->fetchAll(PDO::FETCH_ASSOC);
-
-                if ($booksStatus) {
-                    // Generate a new token after success
-                    $newToken = JWT::encode(
-                        ['data' => ['single_use' => true, 'timestamp' => time()]],
-                        $key,
-                        'HS256'
-                    );
-
-                    // Return success with new token
-                    $response->getBody()->write(json_encode(array(
-                        "status" => "success",
-                        "data" => $booksStatus,
-                        "new_token" => $newToken  // Include the new token in the response
-                    )));
-                } else {
-                    $response->getBody()->write(json_encode(array(
-                        "status" => "fail",
-                        "data" => array("title" => "No borrowed or returned books found")
-                    )));
-                }
-            } catch (Exception $e) {
-                // Handle token errors
-                $response->getBody()->write(json_encode(array(
-                    "status" => "fail",
-                    "data" => array("title" => "Invalid or expired token")
-                )));
-            }
-        } else {
-            // No token provided
-            $response->getBody()->write(json_encode(array(
-                "status" => "fail",
-                "data" => array("title" => "Token required")
-            )));
-        }
-    } catch (PDOException $e) {
-        error_log($e->getMessage());
-        $response->getBody()->write(json_encode(array(
-            "status" => "fail",
-            "data" => array("title" => "Database Error: " . $e->getMessage())
         )));
     }
 
@@ -1284,60 +1205,60 @@ $app->post('/user/return', function (Request $request, Response $response, array
         $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        // Check if a token is provided
+       
         if ($token) {
             try {
-                // Decode the token (assuming HS256 for simplicity)
+                
                 $decoded = JWT::decode($token, new Key($key, 'HS256'));
 
-                // Check if user ID and borrow ID are provided
+               
                 if ($userid && $borrowid) {
-                    // Update the record to mark the book as returned
+                    
                     $sql = "UPDATE books_borrowed SET returned_at = NOW() WHERE borrowid = :borrowid AND userid = :userid";
                     $stat = $conn->prepare($sql);
                     $stat->execute([':borrowid' => $borrowid, ':userid' => $userid]);
 
-                    // If a record was updated
+                    
                     if ($stat->rowCount() > 0) {
-                        // Generate a new single-use token after success
+                       
                         $newToken = JWT::encode(
                             ['data' => ['single_use' => true, 'timestamp' => time()]],
                             $key,
                             'HS256'
                         );
 
-                        // Return success with new token
+                        
                         $response->getBody()->write(json_encode(array(
                             "status" => "success",
                             "data" => array(
                                 "borrowid" => $borrowid,
                                 "userid" => $userid
                             ),
-                            "new_token" => $newToken  // Include the new token in the response
+                            "new_token" => $newToken  
                         )));
                     } else {
-                        // If no record was updated
+                        
                         $response->getBody()->write(json_encode(array(
                             "status" => "fail",
                             "data" => array("title" => "No borrow record found for the given user ID and borrow ID")
                         )));
                     }
                 } else {
-                    // If user ID or borrow ID are missing
+                    
                     $response->getBody()->write(json_encode(array(
                         "status" => "fail",
                         "data" => array("title" => "User ID and Borrow ID are required")
                     )));
                 }
             } catch (Exception $e) {
-                // Handle token errors (invalid or expired token)
+                
                 $response->getBody()->write(json_encode(array(
                     "status" => "fail",
                     "data" => array("title" => "Invalid or expired token")
                 )));
             }
         } else {
-            // If token is missing
+           
             $response->getBody()->write(json_encode(array(
                 "status" => "fail",
                 "data" => array("title" => "Token required")
