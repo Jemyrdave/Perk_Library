@@ -113,7 +113,7 @@ This API is designed to manage the core functionality of a library, including us
   }
   }
   ```
-  <br>
+  
   (If token is already used)
   ```json
   {
@@ -123,7 +123,7 @@ This API is designed to manage the core functionality of a library, including us
   }
   }
   ```
-  <br>
+  
   (If user id is wrong)
   ```json
   {
@@ -133,7 +133,7 @@ This API is designed to manage the core functionality of a library, including us
   }
   }
   ```
-  <br>
+  
   (If user did not put any token)
   ```json
   {
@@ -180,8 +180,8 @@ This API is designed to manage the core functionality of a library, including us
   }
   ```
 
-   <br>
-   (If the token is already used)
+
+  (If the token is already used)
 
   ```json
   {
@@ -191,7 +191,7 @@ This API is designed to manage the core functionality of a library, including us
   }
   }
   ```
-  <br>
+  
   (If username is not registered)
   ```json
   {
@@ -240,7 +240,7 @@ This API is designed to manage the core functionality of a library, including us
   }
   }
   ```
-  <br>
+  
   (If Title or Author is empty)
   ```json
   {
@@ -250,7 +250,7 @@ This API is designed to manage the core functionality of a library, including us
   }
   }
   ```
-  <br>>
+  
   (If token is invalid or expired)
   ```json
   {
@@ -260,8 +260,8 @@ This API is designed to manage the core functionality of a library, including us
   }
   }
   ```
-  <br>
-   (If token was already used)
+  
+  (If token was already used)
   ```json
   {
   "status": "fail",
@@ -305,7 +305,7 @@ This API is designed to manage the core functionality of a library, including us
   }
   }
   ```
-   <br>
+  
   (If book Id is empty)
   ```json
   {
@@ -315,7 +315,7 @@ This API is designed to manage the core functionality of a library, including us
   }
   }
   ```
-  <br>
+ 
   (If token is invalid or expired)
   ```json
   {
@@ -325,8 +325,8 @@ This API is designed to manage the core functionality of a library, including us
   }
   }
   ```
-   <br>
-   (If token was already used)
+  
+  (If token was already used)
   ```json
   {
   "status": "fail",
@@ -372,7 +372,7 @@ This API is designed to manage the core functionality of a library, including us
   }
   }
   ```
-  <br>
+ 
   (If token is invalid or expired)
 
   ```json
@@ -383,7 +383,7 @@ This API is designed to manage the core functionality of a library, including us
   }
   }
   ```
-  <br>
+
    (If token was already used)
   ```json
   {
@@ -431,7 +431,7 @@ This API is designed to manage the core functionality of a library, including us
   }
   }
   ```
-  <br>
+  
   (If token is invalid or expired)
   ```json
   {
@@ -441,7 +441,7 @@ This API is designed to manage the core functionality of a library, including us
   }
   }
   ```
-   <br>
+   
    (If token was already used)
   ```json
   {
@@ -488,7 +488,7 @@ This API is designed to manage the core functionality of a library, including us
   }
   }
   ```
-  <br>
+  
   (If token is invalid or expired)
   ```json
   {
@@ -498,7 +498,7 @@ This API is designed to manage the core functionality of a library, including us
   }
   }
   ```
-  <br>
+ 
   (If token was already used)
   ```json
   {
@@ -544,7 +544,7 @@ This API is designed to manage the core functionality of a library, including us
   }
   }
   ```
-  <br>
+  
   (If Author Id is empty)
 
   ```json
@@ -555,7 +555,7 @@ This API is designed to manage the core functionality of a library, including us
   }
   }
   ```
-  <br>
+ 
   (If token is expired or invalid)
   ```json
   {
@@ -613,7 +613,7 @@ This API is designed to manage the core functionality of a library, including us
   }
   }
   ```
-  <br>
+  
   (If Author Id is empty)
   ```json 
   {
@@ -623,7 +623,7 @@ This API is designed to manage the core functionality of a library, including us
   }
   }
   ```
-  <br>
+  
   (If token is expired or invalid)
 
   ```json
@@ -634,7 +634,7 @@ This API is designed to manage the core functionality of a library, including us
   }
   }
   ```
-  <br>
+  
   (If token was already used)
   ```json
   {
